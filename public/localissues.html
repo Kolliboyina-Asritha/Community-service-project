@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Community Issues</title>
+
+  <style>
+    /* 🔵 SEARCH BAR SECTION */
+    .search-wrapper {
+      width: 100%;
+      text-align: center;
+      padding: 35px 20px;
+      background: #3498db; /* Blue */
+      color: white;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
+
+    .search-wrapper h2 {
+      font-size: 26px;
+      margin-bottom: 15px;
+    }
+
+    .search-bar {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .search-bar input {
+      width: 60%;
+      max-width: 450px;
+      padding: 12px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .search-bar button {
+      padding: 12px 20px;
+      background: #fff;
+      color: #1f6fa5;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .search-bar button:hover {
+      background: #dff1ff;
+    }
+
+    /* CARDS */
+    #issue-results {
+      padding: 40px 20px;
+      display: none;
+    }
+
+    #issue-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .issue-card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .issue-card h3 {
+      color: #3498db; /* Blue */
+    }
+     footer {
+      background-color: #3498db;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 🔍 BLUE SEARCH BAR -->
+  <div class="search-wrapper">
+    <h2>Search Community Issues</h2>
+
+    <div class="search-bar">
+      <input id="searchInput" type="text" placeholder="Search by name, phone or issue...">
+      <button onclick="filterIssues()">Search</button>
+      <button onclick="showAll()" style="background:white; color:#1f6fa5;">All</button>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <section id="issue-results">
+    <h2 style="text-align: center; color: #3498db; margin-bottom: 20px;">Community Issues</h2>
+    <div id="issue-cards"></div>
+  </section>
+  <br>
+  <br>
+
+
+<script>
+let allIssues = [];
+
+// LOAD ALL ISSUES ON PAGE LOAD
+window.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch('/get-community-issues');
+    allIssues = await res.json();
+
+    showIssues(allIssues);
+  } catch (error) {
+    console.error("Error fetching issues:", error);
+    alert("Failed to load community issues.");
+  }
+});
+
+// DISPLAY ISSUES
+function showIssues(issues) {
+  const issueCardsContainer = document.getElementById('issue-cards');
+  issueCardsContainer.innerHTML = '';
+
+  if (issues.length === 0) {
+    issueCardsContainer.innerHTML = "<p>No issues found.</p>";
+  }
+
+  issues.forEach(issue => {
+    const card = document.createElement('div');
+    card.classList.add("issue-card");
+
+    card.innerHTML = `
+      <h3>${issue.name}</h3>
+      <p><strong>Phone:</strong> ${issue.phone}</p>
+      <p><strong>Issue:</strong> ${issue.problem}</p>
+    `;
+
+    issueCardsContainer.appendChild(card);
+  });
+
+  document.getElementById("issue-results").style.display = "block";
+}
+
+// SEARCH ISSUES
+function filterIssues() {
+  const q = document.getElementById("searchInput").value.toLowerCase().trim();
+
+  const filtered = allIssues.filter(i =>
+    i.name.toLowerCase().includes(q) ||
+    i.phone.toLowerCase().includes(q) ||
+    i.problem.toLowerCase().includes(q)
+  );
+
+  showIssues(filtered);
+}
+
+// SHOW ALL AGAIN
+function showAll() {
+  document.getElementById("searchInput").value = "";
+  showIssues(allIssues);
+}
+</script>
+
+</body>
+</html>

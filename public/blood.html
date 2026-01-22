@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donor Search</title>
+
+    <style>
+        /* SEARCH BAR SECTION */
+        .search-wrapper {
+            width: 100%;
+            text-align: center;
+            padding: 35px 20px;
+            background: #e74c3c;
+            color: white;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .search-wrapper h2 {
+            font-size: 26px;
+            margin-bottom: 15px;
+        }
+
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            width: 60%;
+            max-width: 450px;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-bar button {
+            padding: 12px 20px;
+            background: #fff;
+            color: #e74c3c;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .search-bar button:hover {
+            background: #f4d2d2;
+        }
+
+        /* DONOR CARDS */
+        #donor-results {
+            padding: 40px 20px;
+            display: none;
+        }
+
+        #donor-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .donor-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 250px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .donor-card h3 {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 🔍 SEARCH BAR -->
+    <div class="search-wrapper">
+        <h2>Search Donors</h2>
+
+        <div class="search-bar">
+            <input id="searchInput" type="text" placeholder="Search by name, blood group or phone...">
+            <button onclick="filterDonors()">Search</button>
+        </div>
+    </div>
+
+    <!-- 🔽 DONOR RESULTS -->
+    <section id="donor-results">
+        <h2 style="text-align: center; color: #e74c3c; margin-bottom: 20px;">Blood Donors</h2>
+        <div id="donor-cards"></div>
+    </section>
+
+
+<script>
+let allDonors = [];
+
+// LOAD ALL DONORS ON PAGE LOAD
+window.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const res = await fetch('/get-all-donors');
+        allDonors = await res.json();
+
+        showDonors(allDonors);
+    } catch (error) {
+        console.error("Error fetching donors:", error);
+        alert("Failed to load donor list.");
+    }
+});
+
+// FUNCTION TO DISPLAY DONORS
+function showDonors(donors) {
+    const donorCardsContainer = document.getElementById('donor-cards');
+    donorCardsContainer.innerHTML = '';
+
+    if (donors.length === 0) {
+        donorCardsContainer.innerHTML = "<p>No donors found.</p>";
+    }
+
+    donors.forEach(donor => {
+        const card = document.createElement('div');
+        card.classList.add("donor-card");
+
+        card.innerHTML = `
+            <h3>${donor.name}</h3>
+            <p><strong>Phone:</strong> ${donor.phone}</p>
+            <p><strong>Blood Group:</strong> ${donor.bloodgroup}</p>
+        `;
+
+        donorCardsContainer.appendChild(card);
+    });
+
+    document.getElementById("donor-results").style.display = "block";
+}
+
+// SEARCH FILTER
+function filterDonors() {
+    const query = document.getElementById("searchInput").value.toLowerCase();
+
+    const filtered = allDonors.filter(d =>
+        d.name.toLowerCase().includes(query) ||
+        d.bloodgroup.toLowerCase().includes(query) ||
+        d.phone.toLowerCase().includes(query)
+    );
+
+    showDonors(filtered);
+}
+</script>
+
+</body>
+</html>

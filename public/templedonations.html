@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temple Donation Search</title>
+
+    <style>
+        /* SEARCH BAR SECTION */
+        .search-wrapper {
+            width: 100%;
+            text-align: center;
+            padding: 35px 20px;
+            background: #f39c12; /* Yellow */
+            color: white;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .search-wrapper h2 {
+            font-size: 26px;
+            margin-bottom: 15px;
+        }
+
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .search-bar input {
+            width: 60%;
+            max-width: 450px;
+            padding: 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .search-bar button {
+            padding: 12px 20px;
+            background: #fff;
+            color: #f39c12;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .search-bar button:hover {
+            background: #fff5cc;
+        }
+
+        /* DONOR CARDS */
+        #donor-results {
+            padding: 40px 20px;
+            display: none;
+        }
+
+        #donor-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .donor-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            width: 250px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .donor-card h3 {
+            color: #f39c12; /* Yellow */
+        }
+         footer {
+      background-color: #f39c12;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+    }
+    </style>
+</head>
+
+<body>
+
+    <!-- 🔍 SEARCH BAR -->
+    <div class="search-wrapper">
+        <h2>Search Temple Donations</h2>
+
+        <div class="search-bar">
+            <input id="searchInput" type="text" placeholder="Search donor by name...">
+            <button onclick="filterDonors()">Search</button>
+            <button onclick="showAll()" style="background:white; color:#f39c12;">All</button>
+        </div>
+    </div>
+
+    <!-- 🔽 DONOR RESULTS -->
+    <section id="donor-results">
+        <h2 style="text-align: center; color:#f39c12; margin-bottom: 30px;">Temple Donations</h2>
+        <div id="donor-cards"></div>
+    </section>
+    <br>
+    <br>
+    
+
+<script>
+let allDonors = [];
+
+// LOAD ALL DONORS ON PAGE LOAD
+window.addEventListener("DOMContentLoaded", async () => {
+    try {
+        const res = await fetch('/get-temple-donors');
+        allDonors = await res.json();
+
+        showDonors(allDonors);
+    } catch (error) {
+        console.error("Error fetching donors:", error);
+        alert("Failed to load donor list.");
+    }
+});
+
+// FUNCTION TO DISPLAY DONORS
+function showDonors(donors) {
+    const donorCardsContainer = document.getElementById('donor-cards');
+    donorCardsContainer.innerHTML = '';
+
+    if (donors.length === 0) {
+        donorCardsContainer.innerHTML = "<p>No donors found.</p>";
+    }
+
+    donors.forEach(donor => {
+        const card = document.createElement('div');
+        card.classList.add("donor-card");
+
+        card.innerHTML = `
+            <h3>${donor.name}</h3>
+            <p><strong>Phone:</strong> ${donor.phoneno}</p>
+            <p><strong>Donation Amount:</strong> ₹${donor.donationAmount}</p>
+        `;
+
+        donorCardsContainer.appendChild(card);
+    });
+
+    document.getElementById("donor-results").style.display = "block";
+}
+
+// SEARCH FILTER — NAME ONLY
+function filterDonors() {
+    const query = document.getElementById("searchInput").value.toLowerCase().trim();
+
+    const filtered = allDonors.filter(d =>
+        d.name.toLowerCase().includes(query)
+    );
+
+    showDonors(filtered);
+}
+
+// RESET TO ALL DONORS
+function showAll() {
+    document.getElementById("searchInput").value = "";
+    showDonors(allDonors);
+}
+</script>
+
+</body>
+</html>

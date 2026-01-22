@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Digital Community Connect</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+
+    }
+
+    nav {
+      background-color: #378429;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 25px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #1abc9c;
+    }
+
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to right, #2980b9, #6dd5fa);
+      color: white;
+      padding: 60px 30px;
+    }
+
+    .hero-text {
+      flex: 1 1 50%;
+      padding: 20px;
+    }
+
+    .hero-text h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    .hero-text p {
+      font-size: 20px;
+    }
+
+    .hero-img {
+      flex: 1 1 50%;
+      text-align: center;
+    }
+
+    .hero-img img {
+      max-width: 68%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .hero-img img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .digitization {
+      background: #fefefe;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .digitization h2 {
+      font-size: 36px;
+      color: #16a085;
+      margin-bottom: 10px;
+    }
+
+    .digitization p {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 40px;
+    }
+
+    .digitization .cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .digitization .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 280px;
+    }
+
+    .digitization .card-icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+    }
+
+    .digitization .card h3 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .digitization .card p {
+      font-size: 15px;
+      color: #777;
+      margin-bottom: 20px;
+    }
+
+    .digitization .card button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .card-temple .card-icon { color: #f39c12; }
+    .card-temple button { background: #f39c12; }
+
+    .card-issues .card-icon { color: #3498db; }
+    .card-issues button { background: #3498db; }
+
+    .card-blood .card-icon { color: #e74c3c; }
+    .card-blood button { background: #e74c3c; }
+
+    .digitization .footer-text {
+      margin-top: 50px;
+      font-size: 15px;
+      color: #666;
+    }
+
+    .about {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #fefefe;
+      padding: 40px 20px;
+      gap: 10px;
+    }
+
+    .about-img {
+      flex: 1 1 45%;
+      text-align: center;
+    }
+
+    .about-img img {
+      max-width: 68%;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .about-img img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .about-text {
+      flex: 1 1 50%;
+      padding: 10px;
+    }
+
+    .about-text h2 {
+      font-size: 36px;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    .about-text p {
+      font-size: 18px;
+      color: #555;
+    }
+
+    footer {
+      background-color: #378429;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .hero,
+      .about,
+      .digitization .cards {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-text,
+      .about-text {
+        padding: 10px;
+      }
+
+      .hero-img img,
+      .about-img img {
+        margin-top: 20px;
+      }
+    }
+    .watermark-header {
+    text-align: center;
+    padding: 40px 0;
+    background-color: #f9f9f9;
+    position: relative;
+  }
+
+  .watermark-header img {
+    width: 100%; /* adjust size */
+    opacity: 0.3; /* light watermark effect */
+  }
+
+  .navbar {
+    background: #ffffff;
+    padding: 15px 40px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  </style>
+</head>
+<body>
+  
+
+
+  <!-- Navbar -->
+ <nav>
+  <div class="logo">Community Connect</div>
+  <ul id="nav-links">
+    <li id="nav-home"><a href="#">Home</a></li>
+    <li id="nav-about"><a href="#about">About</a></li>
+    
+    <li id="nav-search"><a href="searchblooddonor.html">Search Donors</a></li>
+     <li id="nav-search"><a href="templedonations.html">Temple Donations</a></li>
+      <li id="nav-search"><a href="localissues.html">Local issues</a></li>
+   
+
+    <li id="nav-logout" style="display: none;"><a href="#" onclick="logout()">Logout</a></li>
+  </ul>
+</nav>
+
+
+
+  <img src="com2.png" 
+     style="position: fixed; bottom: 20px; right: 20px; opacity: 0.05; z-index: -1; width: 200px;" 
+     alt="Watermark">
+
+  <!-- Digitization Section -->
+  <section class="digitization">
+    <h2>Community Digitization Platform</h2>
+    <p>Connecting our community through digital records, issue reporting, and blood donor registration</p>
+
+    <div class="cards">
+      <!-- Temple Card -->
+      <div class="card card-temple">
+        <div class="card-icon">📄</div>
+        <h3>Temple Records & Donations</h3>
+        <p>Help digitize temple records and donation history for better community management</p>
+        <a href="temple.html"><button id="temple-btn">Temple Donation</button></a>
+
+      </div>
+
+      <!-- Issues Card -->
+      <div class="card card-issues">
+        <div class="card-icon">💬</div>
+        <h3>Report Local Issues & problems</h3>
+        <p>Report community issues and help improve our local infrastructure and services</p>
+        <a href="communityproblems.html"><button id="community-btn">Report an Issue</button></a>
+
+      </div>
+
+      <!-- Blood Donor Card -->
+      <div class="card card-blood">
+        <div class="card-icon">❤️</div>
+        <h3>Blood Donor Registration</h3>
+        <p>Join our blood donor network and help save lives in emergency situations</p>
+        <a href="blooddonor.html"><button id="blood-btn">Become a Donor</button></a>
+
+      </div>
+    </div>
+
+    <p class="footer-text">
+      Building a stronger community through digital collaboration
+    </p>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="about-img">
+      <img src="com3.jpg" alt="About Community">
+    </div>
+    <div class="about-text">
+      <h2>About This Project</h2>
+      <p>
+        Digital Community Connect is a CSP initiative aimed at enhancing community engagement through technology.
+        It enables digital record-keeping for temples, provides a platform to report local civic issues, and connects
+        blood donors with those in need during emergencies. Our goal is to bring transparency, convenience, and
+        impact to every citizen's fingertips.
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Digital Community Connect | Created for CSP Project | All rights reserved.
+  </footer>
+
+</body>
+
+  
+</html>

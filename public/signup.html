@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Customer Sign Up</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 400px;
+      padding: 30px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .signup-container h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #f90;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 40px 10px 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: 0.3s ease;
+    }
+
+    .form-group input:focus {
+      border-color: #f90;
+      outline: none;
+      box-shadow: 0 0 5px rgba(255, 153, 0, 0.5);
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 36px;
+      right: 10px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .signup-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: orange;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .signup-btn:hover {
+      background-color: darkorange;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .login-link a {
+      color: #f90;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="signup-container">
+    <h2>User Sign Up</h2>
+    <form id="signupForm" onsubmit="return validateForm()">
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="fname">Username</label>
+        <input type="text" id="fname" name="name" required
+               pattern="[A-Za-z\s]{3,50}"
+               title="Enter a valid name (only letters, 3-50 characters)">
+      </div>
+
+      <!-- Phone Number -->
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="text" id="phone" name="mobileno" required
+               pattern="[0-9]{10}"
+               title="Enter a valid 10-digit phone number">
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="pwd" required
+               pattern=".{6,}"
+               title="Password must be at least 6 characters long">
+        <i class="fas fa-eye toggle-password" onclick="togglePassword('password', this)"></i>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="cpassword">Confirm Password</label>
+        <input type="password" id="cpassword" required>
+        <i class="fas fa-eye toggle-password" onclick="togglePassword('cpassword', this)"></i>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="signup-btn">Create Account</button>
+
+      <!-- Login Link -->
+      <div class="login-link">
+        Already have an account? <a href="login.html">Login</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function togglePassword(id, icon) {
+    const input = document.getElementById(id);
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.replace("fa-eye", "fa-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.replace("fa-eye-slash", "fa-eye");
+    }
+  }
+
+  function validateForm() {
+    const password = document.getElementById("password").value;
+    const confirm = document.getElementById("cpassword").value;
+    if (password !== confirm) {
+      alert("Passwords do not match.");
+      return false;
+    }
+    return true;
+  }
+  document.getElementById('signupForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('fname').value.trim();  // ✅ 'name' not 'firstname'
+  const mobileno = document.getElementById('phone').value.trim();
+  const pwd = document.getElementById('password').value.trim();
+  const confirmPwd = document.getElementById('cpassword').value.trim();
+
+  if (!name || !mobileno || !pwd || !confirmPwd) {
+    alert("All fields are required.");
+    return;
+  }
+
+  if (!/^[A-Za-z\s]{3,50}$/.test(name)) {
+    alert("Name must be 3-50 alphabetic characters.");
+    return;
+  }
+
+  if (!/^[0-9]{10}$/.test(mobileno)) {
+    alert("Mobile number must be exactly 10 digits.");
+    return;
+  }
+
+  if (pwd.length < 6) {
+    alert("Password must be at least 6 characters.");
+    return;
+  }
+
+  if (pwd !== confirmPwd) {
+    alert("Passwords do not match.");
+    return;
+  }
+
+  try {
+    const res = await fetch('/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, mobileno, pwd })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      alert(data.success || "Registered successfully!");
+      window.location.href = "login.html";
+    } else {
+      alert(data.message || "Registration failed.");
+    }
+  } catch (err) {
+    console.error("Error:", err);
+    alert("Something went wrong.");
+  }
+});
+
+
+</script>
+
+</body>
+</html>
